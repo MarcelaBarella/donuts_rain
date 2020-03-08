@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title>Rain Of Donuts</title>
+        <link rel = "stylesheet" href = "Style.css">
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.js"></script>
+    </head>
+    <body></body>
+</html>
+<script>
+    let scene, camera, renderer;
+    let donuts = [];
+    let speed = 0.2;
+
+    let randPosition = function(startPosition, finalPosition) {
+        let position = Math.random() * (finalPosition - startPosition);
+        return position + startPosition;
+    };
+
+    let randColor = function() {
+        let rand = Math.random() * 0xffffff;
+        return rand;
+    };
+
+    let createDonut = function() {
+        let geometry = new THREE.TorusGeometry(1, 0.5, 5, 30);
+        let material = new THREE.MeshBasicMaterial({color: randColor()});
+
+        donut = new THREE.Mesh( geometry, material );
+
+        donut.position.x = randPosition(-15, 15);
+        donut.position.y = 15
+        donut.position.z = randPosition(-15, 15);
+
+        scene.add(donut);
+        donuts.push(donut);
+    };
+
+    let init = function() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+        // scene.background = new THREE.Color(randColor());
+
+        renderer = new THREE.WebGLRenderer();
+        camera = new THREE.PerspectiveCamera(75,
+                        window.innerWidth / window.innerHeight);
+
+        document.body.appendChild(renderer.domElement);
+    };
+
+    let mainLoop = function() {
+        let xPosition = Math.random();
+        if(xPosition < 0.1)
+            createDonut();
+
+        donuts.forEach(donut => donut.position.y -= speed);
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(mainLoop);
+    };
+
+    init();
+    mainLoop();
+</script>
